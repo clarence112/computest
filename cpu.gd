@@ -2,7 +2,8 @@ class_name CPU
 extends Node
 
 
-const STACKSIZE:int = 256
+const STACKSIZE:int = 128
+const RAMSIZE:int = 65536
 var loops:int = 10
 
 
@@ -17,15 +18,15 @@ enum {
 	SD,
 	ACCA,
 	ACCB,
+	ACCC,
+	ACCD,
 	DEVADDR,
 	DEVBUF,
 	PCOUNT,
 	ALUMODE,
+	JREL,
 }
 var regs:Array[int] = [
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 ]
@@ -66,11 +67,13 @@ enum {
 }
 
 
-var ram:Array[int] = [
+var ram:PackedInt64Array = []
+
+var firm:Array[int] = [
 	ADD,				#0
 	SET, DEVADDR, 0,	#1
 	SET, A, 0,			#4
-	SET, B, 10,			#7
+	SET, B, 1000,		#7
 	SET, C, 0,			#10
 	SET, D, 1,			#13
 	MOV, ACCB, A,		#16
@@ -115,7 +118,14 @@ func _fmtout():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	ram.resize(RAMSIZE)
 	adddev($"../simpledev")
+	startup()
+
+
+func startup() -> void:
+	for i in firm.size():
+		ram[i] = firm[i]
 
 
 func gram(addr:int) -> int:
@@ -160,25 +170,40 @@ func _process(_delta: float) -> void:
 					regs[opa] = opb
 					pc += 3
 				JMP:
-					pc = opa
+					if regs[JREL] == 0:
+						pc = opa
+					else:
+						pc += opa
 				JLT:
 					if regs[A] < regs[B]:
-						pc = opa
+						if regs[JREL] == 0:
+							pc = opa
+						else:
+							pc += opa
 					else:
 						pc += 2 
 				JGT:
 					if regs[A] > regs[B]:
-						pc = opa
+						if regs[JREL] == 0:
+							pc = opa
+						else:
+							pc += opa
 					else:
 						pc += 2
 				JEQ:
 					if regs[A] == regs[B]:
-						pc = opa
+						if regs[JREL] == 0:
+							pc = opa
+						else:
+							pc += opa
 					else:
 						pc += 2
 				JSR:
 					stack.push_back(pc + 1)
-					pc = opa
+					if regs[JREL] == 0:
+						pc = opa
+					else:
+						pc += opa
 					var s = stack.size()
 					if s > STACKSIZE:
 						running = false
@@ -263,33 +288,57 @@ func _process(_delta: float) -> void:
 				SUB:
 					regs[ACCA] = regs[A] - regs[B]
 					regs[ACCB] = regs[C] - regs[D]
+					regs[ACCC] = regs[A] - regs[C]
+					regs[ACCD] = regs[B] - regs[D]
 				MUL:
 					regs[ACCA] = regs[A] * regs[B]
 					regs[ACCB] = regs[C] * regs[D]
+					regs[ACCC] = regs[A] * regs[C]
+					regs[ACCD] = regs[B] * regs[D]
 				DIV:
 					regs[ACCA] = floori(regs[A] / regs[B])
 					regs[ACCB] = floori(regs[C] / regs[D])
+					regs[ACCC] = floori(regs[A] / regs[C])
+					regs[ACCD] = floori(regs[B] / regs[D])
 				MOD:
 					regs[ACCA] = regs[A] % regs[B]
 					regs[ACCB] = regs[C] % regs[D]
+					regs[ACCC] = regs[A] % regs[C]
+					regs[ACCD] = regs[B] % regs[D]
 				OR:
 					regs[ACCA] = regs[A] | regs[B]
 					regs[ACCB] = regs[C] | regs[D]
+					regs[ACCC] = regs[A] | regs[C]
+					regs[ACCD] = regs[B] | regs[D]
 				NOT:
 					regs[ACCA] = ~ regs[A]
 					regs[ACCB] = ~ regs[C]
+					regs[ACCC] = ~ regs[A]
+					#Why A a second time? ACCC operates on A+C,
+					#but NOT takes only one number. Since A is the
+					#"primary" of the pair, it shows up twice.
+					#Weird hardware quirks? Just accept the fanasy of it all.
+					regs[ACCD] = ~ regs[B]
 				XOR:
 					regs[ACCA] = regs[A] ^ regs[B]
 					regs[ACCB] = regs[C] ^ regs[D]
+					regs[ACCC] = regs[A] ^ regs[C]
+					regs[ACCD] = regs[B] ^ regs[D]
 				AND:
 					regs[ACCA] = regs[A] & regs[B]
 					regs[ACCB] = regs[C] & regs[D]
+					regs[ACCC] = regs[A] & regs[C]
+					regs[ACCD] = regs[B] & regs[D]
 				BSL:
 					regs[ACCA] = regs[A] << regs[B]
 					regs[ACCB] = regs[C] << regs[D]
+					regs[ACCC] = regs[A] << regs[C]
+					regs[ACCD] = regs[B] << regs[D]
 				BSR:
 					regs[ACCA] = regs[A] >> regs[B]
 					regs[ACCB] = regs[C] >> regs[D]
+					regs[ACCC] = regs[A] >> regs[C]
+					regs[ACCD] = regs[B] >> regs[D]
 				ADD, _:
 					regs[ACCA] = regs[A] + regs[B]
 					regs[ACCB] = regs[C] + regs[D]

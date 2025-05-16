@@ -47,8 +47,8 @@ const INSTR:Array = [
 ]
 const REGS := [
 	"A", "B", "C", "D", "SA", "SB", "SC", "SD",
-	"ACCA", "ACCB", "DEVADDR", "DEVBUF", "PCOUNT",
-	"ALUMODE"
+	"ACCA", "ACCB", "ACCC", "ACCD", "DEVADDR",
+	"DEVBUF", "PCOUNT", "ALUMODE", "JREL"
 ]
 const BLKS := [
 	"RAM", "DEV",
@@ -157,7 +157,7 @@ func _ready() -> void:
 		b.add_theme_color_override("font_color", blkCol)
 		b.text = BLKS[i]
 		b.pressed.connect(pInst.bind(i))
-	mem = $"../main/cpu".ram
+	mem = $"../main/cpu".firm
 	redraw()
 
 
