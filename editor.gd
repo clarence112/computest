@@ -33,6 +33,15 @@ const INSTR:Array = [
 	["MUL", []],
 	["DIV", []],
 	["MOD", []],
+	["FPADD", []],
+	["FPSUB", []],
+	["FPMUL", []],
+	["FPDIV", []],
+	["FPMOD", []],
+	["FLR", []],
+	["CIL", []],
+	["RND", []],
+	["ITF", []],
 	["OR", []],
 	["NOT", []],
 	["XOR", []],
@@ -99,6 +108,7 @@ func redraw() -> void:
 						lbl.text = "B" + str(val)
 					else:
 						lbl.text = BLKS[val]
+			@warning_ignore("unassigned_variable")
 			curline.add_child(lbl)
 		else:
 			lbl.text = "$" + str(i)
@@ -181,7 +191,7 @@ func pDat() -> void:
 func edit(inst:int) -> void:
 	editing = inst
 	$"../PopupPanel/VBoxContainer/SpinBox".value = mem[inst]
-	$"../PopupPanel".popup()
+	$"../PopupPanel".show()
 
 
 func dedit() -> void:
@@ -195,3 +205,15 @@ func ddel() -> void:
 	isdat.remove_at(editing)
 	$"../PopupPanel".hide()
 	redraw()
+
+
+func _on_data_value_changed(value: float) -> void:
+	if value < 1:
+		return
+	$ScrollContainer2/TabContainer/Data/LineEdit.text = char(int(value))
+
+
+func _on_data_text_changed(new_text: String) -> void:
+	if new_text.length() == 0:
+		return
+	$ScrollContainer2/TabContainer/Data/SpinBox.set_value_no_signal(ord(new_text[0]))

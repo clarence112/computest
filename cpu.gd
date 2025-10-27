@@ -4,7 +4,9 @@ extends Node
 
 const STACKSIZE:int = 128
 const RAMSIZE:int = 65536
-var loops:int = 10
+var loops:int = 1000
+@export var loadmode := true
+@export var bios_rom:MemoryCard
 
 
 enum {
@@ -49,6 +51,15 @@ enum {
 	MUL,
 	DIV,
 	MOD,
+	FPADD,
+	FPSUB,
+	FPMUL,
+	FPDIV,
+	FPMOD,
+	FLR,
+	CIL,
+	RND,
+	ITF,
 	OR,
 	NOT,
 	XOR,
@@ -90,40 +101,47 @@ var pc:int = 0
 var running := false
 var stat:int = SOK
 var devs:Array[Device] = []
+var convhold:PackedByteArray = []
 
 
-func adddev(d:Device):
+func adddev(d:Device) -> void:
 	devs.push_back(d)
 	d.address = devs.size()
 
 
 func _fmtout():
 	$"../Label".text = (
-		"A       " + str(regs[0]) +
-		"\nB       " + str(regs[1]) +
-		"\nC       " + str(regs[2]) +
-		"\nD       " + str(regs[3]) +
-		"\nSA      " + str(regs[4]) +
-		"\nSB      " + str(regs[5]) +
-		"\nSC      " + str(regs[6]) +
-		"\nSD      " + str(regs[7]) +
-		"\nACCA    " + str(regs[8]) +
-		"\nACCB    " + str(regs[9]) +
-		"\nDEVADDR " + str(regs[10]) +
-		"\nDEVBUF  " + str(regs[11]) +
-		"\nPCOUNT  " + str(regs[12]) +
-		"\nALUMODE " + str(regs[13])
+		"A       " + str(regs[A]) +
+		"\nB       " + str(regs[B]) +
+		"\nC       " + str(regs[C]) +
+		"\nD       " + str(regs[D]) +
+		"\nSA      " + str(regs[SA]) +
+		"\nSB      " + str(regs[SB]) +
+		"\nSC      " + str(regs[SC]) +
+		"\nSD      " + str(regs[SD]) +
+		"\nACCA    " + str(regs[ACCA]) +
+		"\nACCB    " + str(regs[ACCB]) +
+		"\nACCC    " + str(regs[ACCC]) +
+		"\nACCD    " + str(regs[ACCD]) +
+		"\nDEVADDR " + str(regs[DEVADDR]) +
+		"\nDEVBUF  " + str(regs[DEVBUF]) +
+		"\nPCOUNT  " + str(regs[PCOUNT]) +
+		"\nALUMODE " + str(regs[ALUMODE]) +
+		"\nStatus  " + str(stat)
 	)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	ram.resize(RAMSIZE)
+	convhold.resize(8)
 	adddev($"../simpledev")
 	startup()
 
 
 func startup() -> void:
+	if loadmode && is_instance_valid(bios_rom):
+		firm = bios_rom.data.duplicate()
 	for i in firm.size():
 		ram[i] = firm[i]
 
@@ -146,7 +164,6 @@ func gdev() -> Device:
 	return devs[regs[DEVADDR] % devs.size()]
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if running:
 		for _i in loops:
@@ -296,15 +313,27 @@ func _process(_delta: float) -> void:
 					regs[ACCC] = regs[A] * regs[C]
 					regs[ACCD] = regs[B] * regs[D]
 				DIV:
-					regs[ACCA] = floori(regs[A] / regs[B])
-					regs[ACCB] = floori(regs[C] / regs[D])
-					regs[ACCC] = floori(regs[A] / regs[C])
-					regs[ACCD] = floori(regs[B] / regs[D])
+					if regs[B] != 0:
+						@warning_ignore("integer_division")
+						regs[ACCA] = floori(regs[A] / regs[B])
+					if regs[D] != 0:
+						@warning_ignore("integer_division")
+						regs[ACCB] = floori(regs[C] / regs[D])
+					if regs[C] != 0:
+						@warning_ignore("integer_division")
+						regs[ACCC] = floori(regs[A] / regs[C])
+					if regs[D] != 0:
+						@warning_ignore("integer_division")
+						regs[ACCD] = floori(regs[B] / regs[D])
 				MOD:
-					regs[ACCA] = regs[A] % regs[B]
-					regs[ACCB] = regs[C] % regs[D]
-					regs[ACCC] = regs[A] % regs[C]
-					regs[ACCD] = regs[B] % regs[D]
+					if regs[B] != 0:
+						regs[ACCA] = regs[A] % regs[B]
+					if regs[D] != 0:
+						regs[ACCB] = regs[C] % regs[D]
+					if regs[C] != 0:
+						regs[ACCC] = regs[A] % regs[C]
+					if regs[D] != 0:
+						regs[ACCD] = regs[B] % regs[D]
 				OR:
 					regs[ACCA] = regs[A] | regs[B]
 					regs[ACCB] = regs[C] | regs[D]
@@ -339,11 +368,95 @@ func _process(_delta: float) -> void:
 					regs[ACCB] = regs[C] >> regs[D]
 					regs[ACCC] = regs[A] >> regs[C]
 					regs[ACCD] = regs[B] >> regs[D]
+				FPADD, FPSUB, FPMUL, FPDIV, FPMOD, FLR, CIL, RND, ITF:
+					var tA := raw_to_float(regs[A])
+					var tB := raw_to_float(regs[B])
+					var tC := raw_to_float(regs[C])
+					var tD := raw_to_float(regs[D])
+					var tACCA:float
+					var tACCB:float
+					var tACCC:float
+					var tACCD:float
+					var conv := true
+					match regs[ALUMODE]:
+						FPADD:
+							tACCA = tA + tB
+							tACCB = tC + tD
+							tACCC = tA + tC
+							tACCD = tB + tD
+						FPSUB:
+							tACCA = tA - tB
+							tACCB = tC - tD
+							tACCC = tA - tC
+							tACCD = tB - tD
+						FPMUL:
+							tACCA = tA * tB
+							tACCB = tC * tD
+							tACCC = tA * tC
+							tACCD = tB * tD
+						FPDIV:
+							if tB != 0.0:
+								tACCA = tA / tB
+							if tD != 0.0:
+								tACCB = tC / tD
+							if tC != 0.0:
+								tACCC = tA / tC
+							if tD != 0.0:
+								tACCD = tB / tD
+						FPMOD:
+							if tB != 0.0:
+								tACCA = fmod(tA, tB)
+							if tD != 0.0:
+								tACCB = fmod(tC, tD)
+							if tC != 0.0:
+								tACCC = fmod(tA, tC)
+							if tD != 0.0:
+								tACCD = fmod(tB, tD)
+						FLR:
+							conv = false
+							regs[ACCA] = floori(tA)
+							regs[ACCB] = floori(tC)
+							regs[ACCC] = floori(tA)
+							regs[ACCD] = floori(tB)
+						CIL:
+							conv = false
+							regs[ACCA] = ceili(tA)
+							regs[ACCB] = ceili(tC)
+							regs[ACCC] = ceili(tA)
+							regs[ACCD] = ceili(tB)
+						RND:
+							conv = false
+							regs[ACCA] = roundi(tA)
+							regs[ACCB] = roundi(tC)
+							regs[ACCC] = roundi(tA)
+							regs[ACCD] = roundi(tB)
+						ITF:
+							tACCA = float(regs[A])
+							tACCB = float(regs[C])
+							tACCC = float(regs[A])
+							tACCD = float(regs[B])
+					if conv:
+						regs[ACCA] = float_to_raw(tACCA)
+						regs[ACCB] = float_to_raw(tACCB)
+						regs[ACCC] = float_to_raw(tACCC)
+						regs[ACCD] = float_to_raw(tACCD)
 				ADD, _:
 					regs[ACCA] = regs[A] + regs[B]
 					regs[ACCB] = regs[C] + regs[D]
+					regs[ACCC] = regs[A] + regs[C]
+					regs[ACCD] = regs[B] + regs[D]
 		_fmtout()
 		$"../Label2".text = str(stack)
+
+
+func float_to_raw(i:float) -> int:
+	convhold.encode_double(0, i)
+	return convhold.decode_s64(0)
+
+
+func raw_to_float(i:int) -> float:
+	convhold.encode_s64(0, i)
+	return convhold.decode_double(0)
 
 
 func run() -> void:

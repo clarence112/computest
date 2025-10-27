@@ -1,0 +1,14 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://6bgxpv1w2c0r"]
+
+[ext_resource type="FontFile" uid="uid://c8i1yc4p4lp11" path="res://Glass_TTY_VT220.ttf" id="1_5alh1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_75k4r"]
+bg_color = Color(0.06415028, 0.025227036, 3.008172e-09, 1)
+
+[resource]
+Label/colors/font_color = Color(1, 0.6392157, 0, 1)
+Label/constants/line_spacing = 0
+Label/font_sizes/font_size = 20
+Label/fonts/font = ExtResource("1_5alh1")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_75k4r")
+VBoxContainer/constants/separation = 0

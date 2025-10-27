@@ -1,18 +1,56 @@
-class_name Device
-extends Label
+@abstract class_name Device
+extends Node
+
+
+enum DEVICE_DESCRIPTOR {
+	SYSTEM_MANAGEMENT_CONTROLLER,
+	GENERIC,
+	COMPOSITE,
+	VENDOR_CUSTOM,
+	STREAM_IN,
+	STREAM_OUT,
+	VOLITILE_BLK,
+	NON_VOLITILE_BLK,
+	READ_ONLY_BLK,
+	GENERIC_HID,
+	GRAPHICS_RAW,
+	GRAPHICS_2D_ACCELERATED,
+	GRAPHICS_3D_ACCELERATED,
+	GRAPHICS_VENDOR_CUSTOM,
+	EXPANSION_PORT_VENDOR_CUSTOM,
+	EXPANSION_PORT_SERIAL,
+	EXPANSION_PORT_I2C,
+	EXPANSION_PORT_DIGITAL_IO_OR_PARRALLEL,
+	EXPANSION_PORT_ANALOG_IO,
+	EXPANSION_PORT_USB,
+	EXPANSION_PORT_PS2_HID,
+	EXPANSION_PORT_MIDI,
+	AUDIO_BANK,
+	AUDIO_SYNTH,
+	AUDIO_STREAM,
+	AUDIO_MULTISTREAM,
+	AUDIO_MULTISTREAM_SPATIAL_ACCELERATED,
+	AUDIO_VENDOR_CUSTOM,
+}
+enum ADDRESS_STANDARDS {
+	DESCRIPTOR = 0,
+	VENDOR_ID = 1,
+	MODEL = 2,
+	#PORTS
+	PORT_BUFFER_SIZE_IN = 3,
+	PORT_BUFFER_SIZE_OUT = 4,
+	PORT_BUFFER_STATUS = 5,
+}
 
 
 var address:int = 0
 var register:int = 0
 
 
-var memory:Array[int] = [0, 0, 0, 0, 0]
+var memory:Array[int]
 
 
-func setmem(addr:int, val:int) -> void:
-	text = "(" + str(address) + ", " + str(register) + ") " + str(addr) + ", " + str(val)
-	memory[addr % memory.size()] = val
+@abstract func setmem(addr:int, val:int) -> void
 
 
-func getmem(addr:int) -> int:
-	return memory[addr % memory.size()]
+@abstract func getmem(addr:int) -> int
