@@ -49,6 +49,7 @@ const INSTR:Array = [
 	["BSL", []],
 	["BSR", []],
 	["BCPY", [BLK, ADDR, BLK, ADDR, DAT]],
+	["BWRT", [BLK, ADDR, BLK, ADDR, DAT]],
 	["PUSH", [REG, BLK, ADDR]],
 	["PULL", [BLK, ADDR, REG]],
 	["HLT", [DAT]],

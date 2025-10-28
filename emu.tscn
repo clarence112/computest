@@ -6,28 +6,49 @@
 [ext_resource type="FontFile" uid="uid://cfn7ge48e2ffa" path="res://PxPlus_IBM_VGA_8x16.ttf" id="3_airrw"]
 [ext_resource type="Theme" uid="uid://6bgxpv1w2c0r" path="res://terminaltheme.tres" id="4_yo5cd"]
 
-[node name="Control" type="TabContainer"]
+[node name="VBoxContainer" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="MenuBar" type="MenuBar" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="File" type="PopupMenu" parent="PanelContainer/MenuBar"]
+oversampling_override = 1.0
+item_count = 3
+item_0/text = "Open..."
+item_0/id = 0
+item_1/text = "Save"
+item_1/id = 1
+item_2/text = "Save as..."
+item_2/id = 2
+
+[node name="Control" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 current_tab = 1
 
-[node name="main" type="Control" parent="."]
+[node name="main" type="Control" parent="Control"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="cpu" type="Node" parent="main"]
+[node name="cpu" type="Node" parent="Control/main"]
 script = ExtResource("1_5tpwo")
 
-[node name="simpledev" type="Label" parent="main"]
+[node name="simpledev" type="Label" parent="Control/main"]
 layout_mode = 0
 script = ExtResource("2_5l5gq")
 
-[node name="Button" type="Button" parent="main"]
+[node name="Button" type="Button" parent="Control/main"]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -36,7 +57,7 @@ offset_right = 74.0
 offset_bottom = 22.0
 text = "start that shit"
 
-[node name="Label" type="Label" parent="main"]
+[node name="Label" type="Label" parent="Control/main"]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 51.0
@@ -45,7 +66,7 @@ offset_bottom = 74.0
 theme_override_fonts/font = ExtResource("3_airrw")
 text = "hheh"
 
-[node name="Label2" type="Label" parent="main"]
+[node name="Label2" type="Label" parent="Control/main"]
 layout_mode = 0
 offset_left = 29.0
 offset_top = 29.0
@@ -54,7 +75,7 @@ offset_bottom = 59.0
 theme_override_fonts/font = ExtResource("3_airrw")
 text = "hheh"
 
-[node name="PanelContainer" type="PanelContainer" parent="main"]
+[node name="PanelContainer" type="PanelContainer" parent="Control/main"]
 layout_mode = 0
 offset_left = 178.0
 offset_top = 48.0
@@ -62,7 +83,7 @@ offset_right = 530.0
 offset_bottom = 64.0
 theme = ExtResource("4_yo5cd")
 
-[node name="Label" type="Label" parent="main/PanelContainer"]
+[node name="Label" type="Label" parent="Control/main/PanelContainer"]
 layout_mode = 2
 text = "+------------------------------------------------------------------------------+
 | 80x24                                                                        |
@@ -89,7 +110,7 @@ text = "+-----------------------------------------------------------------------
 |                                                                              |
 +------------------------------------------------------------------------------+"
 
-[node name="editor" type="HSplitContainer" parent="."]
+[node name="editor" type="HSplitContainer" parent="Control"]
 layout_mode = 2
 split_offset = -300
 script = ExtResource("3_2r6f6")
@@ -101,88 +122,88 @@ datCol = Color(0.364706, 1, 0.301961, 1)
 blkCol = Color(0.565947, 0.562534, 1, 1)
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="editor"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/editor"]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="editor/ScrollContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/editor/ScrollContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="editor/ScrollContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VSeparator" type="VSeparator" parent="editor/ScrollContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="Control/editor/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="editor/ScrollContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="editor"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="Control/editor"]
 layout_mode = 2
 
-[node name="TabContainer" type="TabContainer" parent="editor/ScrollContainer2"]
+[node name="TabContainer" type="TabContainer" parent="Control/editor/ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 current_tab = 3
 
-[node name="Instructions" type="VBoxContainer" parent="editor/ScrollContainer2/TabContainer"]
+[node name="Instructions" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 metadata/_tab_index = 0
 
-[node name="Registers" type="VBoxContainer" parent="editor/ScrollContainer2/TabContainer"]
+[node name="Registers" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Address" type="VBoxContainer" parent="editor/ScrollContainer2/TabContainer"]
+[node name="Address" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="SpinBox" type="SpinBox" parent="editor/ScrollContainer2/TabContainer/Address"]
+[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Address"]
 layout_mode = 2
 rounded = true
 allow_greater = true
 prefix = "$"
 
-[node name="Button" type="Button" parent="editor/ScrollContainer2/TabContainer/Address"]
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Address"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.791106, 0.791106, 1)
 text = "Submit"
 
-[node name="Data" type="VBoxContainer" parent="editor/ScrollContainer2/TabContainer"]
+[node name="Data" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="SpinBox" type="SpinBox" parent="editor/ScrollContainer2/TabContainer/Data"]
+[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="LineEdit" type="LineEdit" parent="editor/ScrollContainer2/TabContainer/Data"]
+[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
 layout_mode = 2
 max_length = 1
 
-[node name="Button" type="Button" parent="editor/ScrollContainer2/TabContainer/Data"]
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.364706, 1, 0.301961, 1)
 text = "Submit"
 
-[node name="Blocks" type="VBoxContainer" parent="editor/ScrollContainer2/TabContainer"]
+[node name="Blocks" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="PopupPanel" type="Window" parent="."]
+[node name="PopupPanel" type="Window" parent="Control"]
 oversampling_override = 1.0
 title = "Edit"
 initial_position = 1
@@ -191,28 +212,35 @@ visible = false
 always_on_top = true
 keep_title_visible = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PopupPanel"]
 offset_right = 400.0
 offset_bottom = 300.0
 
-[node name="SpinBox" type="SpinBox" parent="PopupPanel/VBoxContainer"]
+[node name="SpinBox" type="SpinBox" parent="Control/PopupPanel/VBoxContainer"]
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="Button" type="Button" parent="PopupPanel/VBoxContainer"]
+[node name="Button" type="Button" parent="Control/PopupPanel/VBoxContainer"]
 layout_mode = 2
 text = "Edit"
 
-[node name="Button2" type="Button" parent="PopupPanel/VBoxContainer"]
+[node name="Button2" type="Button" parent="Control/PopupPanel/VBoxContainer"]
 layout_mode = 2
 text = "Delete"
 
-[connection signal="pressed" from="main/Button" to="main/cpu" method="run"]
-[connection signal="pressed" from="editor/ScrollContainer2/TabContainer/Address/Button" to="editor" method="pAddr"]
-[connection signal="value_changed" from="editor/ScrollContainer2/TabContainer/Data/SpinBox" to="editor" method="_on_data_value_changed"]
-[connection signal="text_changed" from="editor/ScrollContainer2/TabContainer/Data/LineEdit" to="editor" method="_on_data_text_changed"]
-[connection signal="pressed" from="editor/ScrollContainer2/TabContainer/Data/Button" to="editor" method="pDat"]
-[connection signal="pressed" from="PopupPanel/VBoxContainer/Button" to="editor" method="dedit"]
-[connection signal="pressed" from="PopupPanel/VBoxContainer/Button2" to="editor" method="ddel"]
+[node name="FileDialog" type="FileDialog" parent="Control"]
+title = "Open a File"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.tres")
+use_native_dialog = true
+
+[connection signal="pressed" from="Control/main/Button" to="Control/main/cpu" method="run"]
+[connection signal="pressed" from="Control/editor/ScrollContainer2/TabContainer/Address/Button" to="Control/editor" method="pAddr"]
+[connection signal="value_changed" from="Control/editor/ScrollContainer2/TabContainer/Data/SpinBox" to="Control/editor" method="_on_data_value_changed"]
+[connection signal="text_changed" from="Control/editor/ScrollContainer2/TabContainer/Data/LineEdit" to="Control/editor" method="_on_data_text_changed"]
+[connection signal="pressed" from="Control/editor/ScrollContainer2/TabContainer/Data/Button" to="Control/editor" method="pDat"]
+[connection signal="pressed" from="Control/PopupPanel/VBoxContainer/Button" to="Control/editor" method="dedit"]
+[connection signal="pressed" from="Control/PopupPanel/VBoxContainer/Button2" to="Control/editor" method="ddel"]

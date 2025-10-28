@@ -67,6 +67,7 @@ enum {
 	BSL,
 	BSR,
 	BCPY,
+	BWRT,
 	PUSH,
 	PULL,
 	HLT,
@@ -268,17 +269,30 @@ func _process(_delta: float) -> void:
 					regs[ALUMODE] = BSR
 					pc += 1
 				BCPY:
+					var dev := gdev()
 					for i in clampi(ope, 0, 1024):
 						var val:int = 0
 						if opa == RAM:
 							val = gram(opb + i)
 						elif opa == DEV:
-							val = gdev().getmem(opb + i)
+							val = dev.getmem(opb + i)
 						if opc == RAM:
 							sram(opd + i, val)
 						elif opc == DEV:
-							gdev().setmem(opd + i, val)
+							dev.setmem(opd + i, val)
 					pc += 6
+				BWRT:
+					var dev := gdev()
+					for i in clampi(ope, 0, 1024):
+						var val:int = 0
+						if opa == RAM:
+							val = gram(opb + i)
+						elif opa == DEV:
+							val = dev.getmem(opb)
+						if opc == RAM:
+							sram(opd + i, val)
+						elif opc == DEV:
+							dev.setmem(opd, val)
 				PUSH:
 					opa = clampi(opa, 0, regs.size() - 1)
 					if opb == RAM:
