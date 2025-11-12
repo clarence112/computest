@@ -1,0 +1,236 @@
+[gd_scene load_steps=14 format=3 uid="uid://dhr12my77luyy"]
+
+[ext_resource type="Theme" uid="uid://6bgxpv1w2c0r" path="res://terminaltheme.tres" id="1_bk81m"]
+[ext_resource type="Script" uid="uid://c00tp51tevdod" path="res://tty.gd" id="2_nljxu"]
+[ext_resource type="AudioStream" uid="uid://bmehnprji4ufy" path="res://terminal_beeps_hq_vt100_bell.ogg" id="3_vn8kv"]
+
+[sub_resource type="Gradient" id="Gradient_eovih"]
+colors = PackedColorArray(0.8509804, 0.75686276, 0.5686275, 1, 0.7490196, 0.63529414, 0.40392157, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6443d"]
+gradient = SubResource("Gradient_eovih")
+width = 800
+height = 19
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="Gradient" id="Gradient_25c0t"]
+colors = PackedColorArray(0.3882353, 0.3882353, 0.3882353, 0.28235295, 0, 0, 0, 0.28235295)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vn8kv"]
+gradient = SubResource("Gradient_25c0t")
+width = 15
+height = 19
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="Animation" id="Animation_eovih"]
+resource_name = "scroll"
+length = 0.1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("vt100/Label:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat64Array(0, 0.10000000149011612),
+"transitions": PackedFloat64Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -19)]
+}
+
+[sub_resource type="Animation" id="Animation_6443d"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("vt100/Label:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat64Array(0),
+"transitions": PackedFloat64Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gkukx"]
+_data = {
+&"RESET": SubResource("Animation_6443d"),
+&"scroll": SubResource("Animation_eovih")
+}
+
+[sub_resource type="Animation" id="Animation_vn8kv"]
+resource_name = "blink"
+length = 0.39999999999999997
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("vt100/Label/cur:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat64Array(0, 0.20000000298023224),
+"transitions": PackedFloat64Array(1, 1),
+"update": 1,
+"values": ["_", ""]
+}
+
+[sub_resource type="Animation" id="Animation_2lgrg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("vt100/Label/cur:text")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat64Array(0),
+"transitions": PackedFloat64Array(1),
+"update": 1,
+"values": ["_"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tqbfo"]
+_data = {
+&"RESET": SubResource("Animation_2lgrg"),
+&"blink": SubResource("Animation_vn8kv")
+}
+
+[node name="vt101" type="Node"]
+script = ExtResource("2_nljxu")
+
+[node name="vt100" type="Panel" parent="."]
+offset_right = 800.0
+offset_bottom = 456.0
+focus_mode = 1
+theme = ExtResource("1_bk81m")
+
+[node name="Label" type="Label" parent="vt100"]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 475.0
+text = "+------------------------------------------------------------------------------+
+| 80x24                                                                        |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
+|                                                                              |
++------------------------------------------------------------------------------+
+---------"
+
+[node name="cur" type="Label" parent="vt100/Label"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 19.0
+text = "_"
+
+[node name="TextureRect" type="TextureRect" parent="vt100"]
+layout_mode = 0
+offset_top = 456.0
+offset_right = 800.0
+offset_bottom = 475.0
+texture = SubResource("GradientTexture2D_6443d")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="vt100/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="ColorRect" type="ColorRect" parent="vt100/TextureRect/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+color = Color(0.2627451, 0, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="vt100/TextureRect/HBoxContainer/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vn8kv")
+
+[node name="ColorRect2" type="ColorRect" parent="vt100/TextureRect/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+color = Color(0.2620886, 1.5792902e-07, 2.4065375e-08, 1)
+
+[node name="TextureRect" type="TextureRect" parent="vt100/TextureRect/HBoxContainer/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vn8kv")
+
+[node name="ColorRect3" type="ColorRect" parent="vt100/TextureRect/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+color = Color(0.2620886, 1.5792902e-07, 2.4065375e-08, 1)
+
+[node name="TextureRect" type="TextureRect" parent="vt100/TextureRect/HBoxContainer/ColorRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vn8kv")
+
+[node name="ColorRect4" type="ColorRect" parent="vt100/TextureRect/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+color = Color(0.2620886, 1.5792902e-07, 2.4065375e-08, 1)
+
+[node name="TextureRect" type="TextureRect" parent="vt100/TextureRect/HBoxContainer/ColorRect4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vn8kv")
+
+[node name="Control" type="Control" parent="vt100/TextureRect/HBoxContainer"]
+layout_mode = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_gkukx")
+}
+
+[node name="bell" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_vn8kv")
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_tqbfo")
+}
+autoplay = "blink"

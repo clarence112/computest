@@ -137,10 +137,18 @@ func _ready() -> void:
 	ram.resize(RAMSIZE)
 	convhold.resize(8)
 	adddev($"../simpledev")
+	adddev($"../Window/vt101")
 	startup()
 
 
 func startup() -> void:
+	if running:
+		return
+	pc = 0
+	stack = []
+	stat = SOK
+	for i in regs.size():
+		regs[i] = 0
 	if loadmode && is_instance_valid(bios_rom):
 		firm = bios_rom.data.duplicate()
 	for i in firm.size():
@@ -293,6 +301,7 @@ func _process(_delta: float) -> void:
 							sram(opd + i, val)
 						elif opc == DEV:
 							dev.setmem(opd, val)
+					pc += 6
 				PUSH:
 					opa = clampi(opa, 0, regs.size() - 1)
 					if opb == RAM:
@@ -474,5 +483,9 @@ func raw_to_float(i:int) -> float:
 
 
 func run() -> void:
-	#OS.alert("test")
+	startup()
+	running = true
+
+
+func run_no_reset() -> void:
 	running = true

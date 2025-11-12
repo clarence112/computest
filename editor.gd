@@ -65,18 +65,20 @@ const BLKS := [
 ]
 
 
-var mem:Array[int] = []
-var isdat:Array[bool] = []
+var mem:MemoryCard
 var editing:int = 0
+var filepath:String
 
 
 @onready var linens:VBoxContainer = $ScrollContainer/HBoxContainer/VBoxContainer
 @onready var lines:VBoxContainer = $ScrollContainer/HBoxContainer/VBoxContainer2
 @onready var tabs:TabContainer = $ScrollContainer2/TabContainer
+@onready var cpu:CPU = $"../main/cpu"
+@onready var fd:FileDialog = $"../FileDialog"
 
 
 func redraw() -> void:
-	isdat.resize(mem.size())
+	mem.is_dat.resize(mem.data.size())
 	for i in linens.get_children():
 		i.queue_free()
 	for i in lines.get_children():
@@ -84,8 +86,8 @@ func redraw() -> void:
 	var i:int = 0
 	var intrtypes:Array[int]
 	var curline:HBoxContainer
-	while i < mem.size():
-		var val = mem[i]
+	while i < mem.data.size():
+		var val = mem.data[i]
 		var lbl := Button.new()
 		if intrtypes.size() > 0:
 			lbl.pressed.connect(edit.bind(i))
@@ -120,7 +122,7 @@ func redraw() -> void:
 			lines.add_child(curline)
 			lbl = Button.new()
 			lbl.pressed.connect(edit.bind(i))
-			if isdat[i] or val >= INSTR.size():
+			if mem.is_dat[i] or val >= INSTR.size():
 				lbl.add_theme_color_override(&"font_color", datCol)
 				lbl.text = str(val)
 			else:
@@ -168,42 +170,67 @@ func _ready() -> void:
 		b.add_theme_color_override("font_color", blkCol)
 		b.text = BLKS[i]
 		b.pressed.connect(pInst.bind(i))
-	mem = $"../main/cpu".firm
+	_sync_mem()
+
+
+func load_card():
+	if ResourceLoader.exists(filepath):
+		var dat:Resource = ResourceLoader.load(filepath)
+		if dat is MemoryCard:
+			cpu.bios_rom = dat
+			_sync_mem()
+			cpu.startup()
+
+
+func save_card():
+	if is_instance_valid(mem):
+		ResourceSaver.save(mem, filepath)
+		_sync_mem()
+		cpu.startup()
+
+
+func _sync_mem():
+	if is_instance_valid(cpu.bios_rom):
+		mem = cpu.bios_rom
+	else:
+		mem = MemoryCard.new()
+		mem.data = cpu.firm.duplicate()
+		cpu.bios_rom = mem
 	redraw()
 
 
 func pInst(inst:int) -> void:
-	mem.append(inst)
+	mem.data.append(inst)
 	redraw()
 
 
 func pAddr() -> void:
-	mem.append(int($ScrollContainer2/TabContainer/Address/SpinBox.value))
+	mem.data.append(int($ScrollContainer2/TabContainer/Address/SpinBox.value))
 	redraw()
 
 
 func pDat() -> void:
-	mem.append(int($ScrollContainer2/TabContainer/Data/SpinBox.value))
-	isdat.resize(mem.size())
-	isdat[-1] = true
+	mem.data.append(int($ScrollContainer2/TabContainer/Data/SpinBox.value))
+	mem.is_dat.resize(mem.data.size())
+	mem.is_dat[-1] = true
 	redraw()
 
 
 func edit(inst:int) -> void:
 	editing = inst
-	$"../PopupPanel/VBoxContainer/SpinBox".value = mem[inst]
+	$"../PopupPanel/VBoxContainer/SpinBox".value = mem.data[inst]
 	$"../PopupPanel".show()
 
 
 func dedit() -> void:
-	mem[editing] = int($"../PopupPanel/VBoxContainer/SpinBox".value)
+	mem.data[editing] = int($"../PopupPanel/VBoxContainer/SpinBox".value)
 	$"../PopupPanel".hide()
 	redraw()
 
 
 func ddel() -> void:
-	mem.remove_at(editing)
-	isdat.remove_at(editing)
+	mem.data.remove_at(editing)
+	mem.is_dat.remove_at(editing)
 	$"../PopupPanel".hide()
 	redraw()
 
@@ -218,3 +245,36 @@ func _on_data_text_changed(new_text: String) -> void:
 	if new_text.length() == 0:
 		return
 	$ScrollContainer2/TabContainer/Data/SpinBox.set_value_no_signal(ord(new_text[0]))
+
+
+func _pString() -> void:
+	for i in $ScrollContainer2/TabContainer/String/LineEdit.text:
+		var v := ord(i)
+		mem.data.append(v)
+		mem.is_dat.resize(mem.data.size())
+		mem.is_dat[-1] = true
+	if $ScrollContainer2/TabContainer/String/CheckButton.button_pressed:
+		mem.data.append(0)
+		mem.is_dat.resize(mem.data.size())
+		mem.is_dat[-1] = true
+	redraw()
+
+
+func _on_file_index_pressed(index: int) -> void:
+	match index:
+		0:
+			fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+			fd.popup()
+			filepath = await fd.file_selected
+			load_card()
+		1:
+			if not ResourceLoader.exists(filepath):
+				fd.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+				fd.popup()
+				filepath = await fd.file_selected
+			save_card()
+		2:
+			fd.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+			fd.popup()
+			filepath = await fd.file_selected
+			save_card()

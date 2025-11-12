@@ -6,9 +6,12 @@
 bg_color = Color(0.06415028, 0.025227036, 3.008172e-09, 1)
 
 [resource]
+default_font = ExtResource("1_5alh1")
+default_font_size = 20
 Label/colors/font_color = Color(1, 0.6392157, 0, 1)
 Label/constants/line_spacing = 0
 Label/font_sizes/font_size = 20
 Label/fonts/font = ExtResource("1_5alh1")
+Panel/styles/panel = SubResource("StyleBoxFlat_75k4r")
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_75k4r")
 VBoxContainer/constants/separation = 0

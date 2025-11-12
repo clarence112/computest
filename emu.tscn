@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bo7lysufusws1" path="res://simpledev.gd" id="2_5l5gq"]
 [ext_resource type="Script" uid="uid://bai7jff3efer0" path="res://editor.gd" id="3_2r6f6"]
 [ext_resource type="FontFile" uid="uid://cfn7ge48e2ffa" path="res://PxPlus_IBM_VGA_8x16.ttf" id="3_airrw"]
-[ext_resource type="Theme" uid="uid://6bgxpv1w2c0r" path="res://terminaltheme.tres" id="4_yo5cd"]
+[ext_resource type="PackedScene" uid="uid://dhr12my77luyy" path="res://vt101.tscn" id="4_yo5cd"]
 
 [node name="VBoxContainer" type="VBoxContainer"]
 anchors_preset = 15
@@ -34,10 +34,9 @@ item_2/id = 2
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
-current_tab = 1
+current_tab = 0
 
 [node name="main" type="Control" parent="Control"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -75,42 +74,17 @@ offset_bottom = 59.0
 theme_override_fonts/font = ExtResource("3_airrw")
 text = "hheh"
 
-[node name="PanelContainer" type="PanelContainer" parent="Control/main"]
-layout_mode = 0
-offset_left = 178.0
-offset_top = 48.0
-offset_right = 530.0
-offset_bottom = 64.0
-theme = ExtResource("4_yo5cd")
+[node name="Window" type="Window" parent="Control/main"]
+oversampling_override = 1.0
+title = "VT101"
+initial_position = 2
+size = Vector2i(800, 475)
+unresizable = true
 
-[node name="Label" type="Label" parent="Control/main/PanelContainer"]
-layout_mode = 2
-text = "+------------------------------------------------------------------------------+
-| 80x24                                                                        |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-|                                                                              |
-+------------------------------------------------------------------------------+"
+[node name="vt101" parent="Control/main/Window" instance=ExtResource("4_yo5cd")]
 
 [node name="editor" type="HSplitContainer" parent="Control"]
+visible = false
 layout_mode = 2
 split_offset = -300
 script = ExtResource("3_2r6f6")
@@ -150,7 +124,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
-current_tab = 3
+current_tab = 5
 
 [node name="Instructions" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
 visible = false
@@ -180,6 +154,7 @@ theme_override_colors/font_color = Color(0, 0.791106, 0.791106, 1)
 text = "Submit"
 
 [node name="Data" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
@@ -202,6 +177,23 @@ text = "Submit"
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
+
+[node name="String" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 5
+
+[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+layout_mode = 2
+
+[node name="CheckButton" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+layout_mode = 2
+button_pressed = true
+text = "Null terminated"
+
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.364706, 1, 0.301961, 1)
+text = "Submit"
 
 [node name="PopupPanel" type="Window" parent="Control"]
 oversampling_override = 1.0
@@ -237,10 +229,12 @@ access = 2
 filters = PackedStringArray("*.tres")
 use_native_dialog = true
 
+[connection signal="index_pressed" from="PanelContainer/MenuBar/File" to="Control/editor" method="_on_file_index_pressed"]
 [connection signal="pressed" from="Control/main/Button" to="Control/main/cpu" method="run"]
 [connection signal="pressed" from="Control/editor/ScrollContainer2/TabContainer/Address/Button" to="Control/editor" method="pAddr"]
 [connection signal="value_changed" from="Control/editor/ScrollContainer2/TabContainer/Data/SpinBox" to="Control/editor" method="_on_data_value_changed"]
 [connection signal="text_changed" from="Control/editor/ScrollContainer2/TabContainer/Data/LineEdit" to="Control/editor" method="_on_data_text_changed"]
 [connection signal="pressed" from="Control/editor/ScrollContainer2/TabContainer/Data/Button" to="Control/editor" method="pDat"]
+[connection signal="pressed" from="Control/editor/ScrollContainer2/TabContainer/String/Button" to="Control/editor" method="_pString"]
 [connection signal="pressed" from="Control/PopupPanel/VBoxContainer/Button" to="Control/editor" method="dedit"]
 [connection signal="pressed" from="Control/PopupPanel/VBoxContainer/Button2" to="Control/editor" method="ddel"]
