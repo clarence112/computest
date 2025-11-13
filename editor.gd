@@ -52,6 +52,8 @@ const INSTR:Array = [
 	["BWRT", [BLK, ADDR, BLK, ADDR, DAT]],
 	["PUSH", [REG, BLK, ADDR]],
 	["PULL", [BLK, ADDR, REG]],
+	["ITS", [REG, ADDR]],
+	["FTS", [REG, ADDR]],
 	["HLT", [DAT]],
 	["XCPT", []],
 ]
@@ -253,6 +255,12 @@ func _pString() -> void:
 		mem.data.append(v)
 		mem.is_dat.resize(mem.data.size())
 		mem.is_dat[-1] = true
+	if $ScrollContainer2/TabContainer/String/CheckButton2.button_pressed:
+		mem.data.append(ord("\r"))
+		mem.data.append(ord("\n"))
+		mem.is_dat.resize(mem.data.size())
+		mem.is_dat[-1] = true
+		mem.is_dat[-2] = true
 	if $ScrollContainer2/TabContainer/String/CheckButton.button_pressed:
 		mem.data.append(0)
 		mem.is_dat.resize(mem.data.size())

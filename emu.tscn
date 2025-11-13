@@ -185,6 +185,10 @@ metadata/_tab_index = 5
 [node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/String"]
 layout_mode = 2
 
+[node name="CheckButton2" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+layout_mode = 2
+text = "CRLF"
+
 [node name="CheckButton" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String"]
 layout_mode = 2
 button_pressed = true

@@ -147,6 +147,8 @@ func process_char(ch:int) -> void:
 
 
 func setchar(ch:int) -> void:
+	if ch == 0:
+		return
 	if cursor.x >= LINES.x:
 		if cursor.y >= LINES.y - 1:
 			screen.append("".lpad(LINES.x))

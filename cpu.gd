@@ -70,6 +70,8 @@ enum {
 	BWRT,
 	PUSH,
 	PULL,
+	ITS,
+	FTS,
 	HLT,
 	XCPT,
 }
@@ -177,12 +179,12 @@ func _process(_delta: float) -> void:
 	if running:
 		for _i in loops:
 			gdev().register = regs[DEVBUF]
-			var instr = gram(pc)
-			var opa = gram(pc + 1)
-			var opb = gram(pc + 2)
-			var opc = gram(pc + 3)
-			var opd = gram(pc + 4)
-			var ope = gram(pc + 5)
+			var instr := gram(pc)
+			var opa := gram(pc + 1)
+			var opb := gram(pc + 2)
+			var opc := gram(pc + 3)
+			var opd := gram(pc + 4)
+			var ope := gram(pc + 5)
 			regs[PCOUNT] = pc
 			match instr:
 				NOP:
@@ -278,29 +280,63 @@ func _process(_delta: float) -> void:
 					pc += 1
 				BCPY:
 					var dev := gdev()
-					for i in clampi(ope, 0, 1024):
-						var val:int = 0
-						if opa == RAM:
-							val = gram(opb + i)
-						elif opa == DEV:
-							val = dev.getmem(opb + i)
-						if opc == RAM:
-							sram(opd + i, val)
-						elif opc == DEV:
-							dev.setmem(opd + i, val)
+					if ope <= 0:
+						var i:int = 0
+						var l := true
+						while l:
+							var val:int = 0
+							if opa == RAM:
+								val = gram(opb + i)
+							elif opa == DEV:
+								val = dev.getmem(opb + i)
+							if opc == RAM:
+								sram(opd + i, val)
+							elif opc == DEV:
+								dev.setmem(opd + i, val)
+							if val == 0:
+								l = false
+							i += 1
+					else:
+						for i in clampi(ope, 0, 1024):
+							var val:int = 0
+							if opa == RAM:
+								val = gram(opb + i)
+							elif opa == DEV:
+								val = dev.getmem(opb + i)
+							if opc == RAM:
+								sram(opd + i, val)
+							elif opc == DEV:
+								dev.setmem(opd + i, val)
 					pc += 6
 				BWRT:
 					var dev := gdev()
-					for i in clampi(ope, 0, 1024):
-						var val:int = 0
-						if opa == RAM:
-							val = gram(opb + i)
-						elif opa == DEV:
-							val = dev.getmem(opb)
-						if opc == RAM:
-							sram(opd + i, val)
-						elif opc == DEV:
-							dev.setmem(opd, val)
+					if ope <= 0:
+						var i:int = 0
+						var l := true
+						while l:
+							var val:int = 0
+							if opa == RAM:
+								val = gram(opb + i)
+							elif opa == DEV:
+								val = dev.getmem(opb)
+							if opc == RAM:
+								sram(opd + i, val)
+							elif opc == DEV:
+								dev.setmem(opd, val)
+							if val == 0:
+								l = false
+							i += 1
+					else:
+						for i in clampi(ope, 0, 1024):
+							var val:int = 0
+							if opa == RAM:
+								val = gram(opb + i)
+							elif opa == DEV:
+								val = dev.getmem(opb)
+							if opc == RAM:
+								sram(opd + i, val)
+							elif opc == DEV:
+								dev.setmem(opd, val)
 					pc += 6
 				PUSH:
 					opa = clampi(opa, 0, regs.size() - 1)
@@ -316,6 +352,22 @@ func _process(_delta: float) -> void:
 					elif opa == DEV:
 						regs[opc] = gdev().getmem(opb)
 					pc += 4
+				ITS:
+					var string := str(regs[opa])
+					var c := opb
+					for i in string:
+						sram(c, ord(i))
+						c += 1
+					sram(c, 0)
+					pc += 3
+				FTS:
+					var string := str(raw_to_float(regs[opa]))
+					var c := opb
+					for i in string:
+						sram(c, ord(i))
+						c += 1
+					sram(c, 0)
+					pc += 3
 				HLT:
 					running = false
 					stat = opa
@@ -485,6 +537,10 @@ func raw_to_float(i:int) -> float:
 func run() -> void:
 	startup()
 	running = true
+
+
+func pause() -> void:
+	running = false
 
 
 func run_no_reset() -> void:
