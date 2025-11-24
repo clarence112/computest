@@ -288,3 +288,9 @@ func _on_file_index_pressed(index: int) -> void:
 			fd.popup()
 			filepath = await fd.file_selected
 			save_card()
+		4:
+			filepath = ""
+			mem = MemoryCard.new()
+			mem.data = []
+			cpu.bios_rom = mem
+	redraw()
