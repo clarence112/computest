@@ -19,43 +19,43 @@ enum {
 
 
 const INSTR:Array = [
-	["NOP", []],
-	["MOV", [REG, REG]],
-	["SET", [REG, DAT]],
-	["JMP", [ADDR]],
-	["JLT", [ADDR]],
-	["JGT", [ADDR]],
-	["JEQ", [ADDR]],
-	["JSR", [ADDR]],
-	["RET", []],
-	["ADD", []],
-	["SUB", []],
-	["MUL", []],
-	["DIV", []],
-	["MOD", []],
-	["FPADD", []],
-	["FPSUB", []],
-	["FPMUL", []],
-	["FPDIV", []],
-	["FPMOD", []],
-	["FLR", []],
-	["CIL", []],
-	["RND", []],
-	["ITF", []],
-	["OR", []],
-	["NOT", []],
-	["XOR", []],
-	["AND", []],
-	["BSL", []],
-	["BSR", []],
-	["BCPY", [BLK, ADDR, BLK, ADDR, DAT]],
-	["BWRT", [BLK, ADDR, BLK, ADDR, DAT]],
-	["PUSH", [REG, BLK, ADDR]],
-	["PULL", [BLK, ADDR, REG]],
-	["ITS", [REG, ADDR]],
-	["FTS", [REG, ADDR]],
-	["HLT", [DAT]],
-	["XCPT", []],
+	["NOP", [], "NOP\nDoes nothing"],
+	["MOV", [REG, REG], "MOV [SRC REG] [DEST REG]\nMoves values from SRC to DEST registers"],
+	["SET", [REG, DAT], "SET [REG] [VALUE]\nSets the given register to the given value"],
+	["JMP", [ADDR], "JMP [ADDRESS]\nJumps execution to the given address"],
+	["JLT", [ADDR], "JLT [ADDRESS]\nJumps execution to the given address if A < B"],
+	["JGT", [ADDR], "JGT [ADDRESS]\nJumps execution to the given address if A > B"],
+	["JEQ", [ADDR], "JEQ [ADDRESS]\nJumps execution to the given address if A == B"],
+	["JSR", [ADDR], "JSR [ADDRESS]\nJumps execution to the given address, storing the current address\non the stack to be returned to with RET"],
+	["RET", [], "RET\nJumps execution to the address at the top of the stack"],
+	["ADD", [], "ADD\nSets the ALU to integer addition mode"],
+	["SUB", [], "SUB\nSets the ALU to integer subtraction mode"],
+	["MUL", [], "MUL\nSets the ALU to integer multiplication mode"],
+	["DIV", [], "DIV\nSets the ALU to integer division mode"],
+	["MOD", [], "MOD\nSets the ALU to integer modulo mode"],
+	["FPADD", [], "FPADD\nSets the ALU to floating point addition mode"],
+	["FPSUB", [], "FPSUB\nSets the ALU to floating point subtraction mode"],
+	["FPMUL", [], "FPMUL\nSets the ALU to floating point multiplication mode"],
+	["FPDIV", [], "FPDIV\nSets the ALU to floating point division mode"],
+	["FPMOD", [], "FPMOD\nSets the ALU to floating point modulo mode"],
+	["FLR", [], "FLR\nSets the ALU to floor mode, converting floats to ints"],
+	["CIL", [], "CIL\nSets the ALU to ceiling mode, converting floats to ints"],
+	["RND", [], "RND\nSets the ALU to round mode, converting floats to ints"],
+	["ITF", [], "ITF\nSets the ALU to int-to-float mode, converting ints to floats"],
+	["OR", [], "OR\nSets the ALU to bitwise or mode"],
+	["NOT", [], "NOT\nSets the ALU to bitwise not mode"],
+	["XOR", [], "XOR\nSets the ALU to bitwise xor mode"],
+	["AND", [], "AND\nSets the ALU to bitwise and mode"],
+	["BSL", [], "BSL\nSets the ALU to bitshift left mode"],
+	["BSR", [], "BSR\nSets the ALU to bitshift right mode"],
+	["BCPY", [BLK, ADDR, BLK, ADDR, DAT], "BCPY [SRC TYPE] [SRC ADDRESS] [DEST TYPE] [DEST ADDRESS] [COUNT]\nCopies COUNT words of memory from SRC to DEST, starting from ADDRESS\nIf COUNT <= 0, stops on the first null/0 word"],
+	["BWRT", [BLK, ADDR, BLK, ADDR, DAT], "BWRT [SRC TYPE] [SRC ADDRESS] [DEST TYPE] [DEST ADDRESS] [COUNT]\nCopies COUNT words of memory from SRC to DEST\nDevices will read/write to the same address repeatedly, RAM address will be incremented\nIf COUNT <= 0, stops on the first null/0 word"],
+	["PUSH", [REG, BLK, ADDR], "PUSH [SRC REG] [DEST TYPE] [DEST ADDRESS]\nCopies SRC register to DEST RAM or device"],
+	["PULL", [BLK, ADDR, REG], "PULL [SRC TYPE] [SRC ADDRESS] [DEST REG]\nCopes SRC RAM or device to DEST register"],
+	["ITS", [REG, ADDR], "ITS [SRC REG] [DEST ADDRESS]\nConverts the integer in REG to a null-terminated string, storing it in RAM at ADDRESS"],
+	["FTS", [REG, ADDR], "FTS [SRC REG] [DEST ADDRESS]\nConverts the float in REG to a null-terminated string, storing it in RAM at ADDRESS"],
+	["HLT", [DAT], "HLT [STAT]\nStops execution, with STAT representing an exit code\nExecution can be resumed from this point by external sources"],
+	["XCPT", [DAT], "XCPT [STAT]\nStops execution, with STAT representing an exit code\nExecution CANNOT be resumed from this point without resetting the processor"],
 ]
 const REGS := [
 	"A", "B", "C", "D", "SA", "SB", "SC", "SD",
@@ -152,11 +152,13 @@ func redraw() -> void:
 func _ready() -> void:
 	for i in INSTR.size():
 		var inst = INSTR[i][0]
+		var desc = INSTR[i][2]
 		var b := Button.new()
 		$ScrollContainer2/TabContainer/Instructions.add_child(b)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_color_override("font_color", instrCol)
 		b.text = inst
+		b.tooltip_text = desc
 		b.pressed.connect(pInst.bind(i))
 	for i in REGS.size():
 		var b := Button.new()

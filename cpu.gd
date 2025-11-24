@@ -95,7 +95,7 @@ var firm:Array[int] = [
 	MOV, ACCB, C,		#21
 	PUSH, A, DEV, 0,	#24
 	JMP, 16,			#28
-	HLT,				#30
+	HLT, 0,				#30
 ]
 
 
@@ -375,6 +375,7 @@ func _process(_delta: float) -> void:
 					break
 				XCPT, _:
 					running = false
+					stat = opa
 					break
 			match regs[ALUMODE]:
 				SUB:
