@@ -9,6 +9,10 @@ extends HSplitContainer
 @export var blkCol:Color
 
 
+const SAVEABLE:PackedStringArray = ["*.tres"]
+const LOADABLE:PackedStringArray = ["*.tres", "*.cl_asm", "*.a", "*.txt"]
+
+
 enum {
 	INST,
 	REG,
@@ -184,6 +188,103 @@ func load_card():
 			cpu.bios_rom = dat
 			_sync_mem()
 			cpu.startup()
+	elif FileAccess.file_exists(filepath):
+		assemble()
+
+
+func assemble() -> void:
+	var f := FileAccess.open(filepath, FileAccess.READ)
+	var t := f.get_as_text()
+	f.close()
+	var ta := t.split("\n", false)
+	for i in ta.size():
+		ta[i] = ta[i].strip_edges()
+		ta[i] = ta[i].remove_chars("\r\n")
+	var raw:PackedStringArray = []
+	for i in ta:
+		if "\"" in i:
+			var r:int = 0
+			var instr := false
+			var line:PackedStringArray = [""]
+			var tord := ""
+			while r < i.length():
+				var ch := i[r]
+				if instr:
+					match ch:
+						"\"":
+							instr = false
+							r += 1
+							tord = tord.c_unescape()
+							for c in tord:
+								line.append(str(ord(c)))
+						"\\":
+							tord += ch
+							tord += i[r + 1]
+							r += 2
+						_:
+							tord += ch
+							r += 1
+				else:
+					match ch:
+						"\"":
+							instr = true
+							tord = ""
+							r += 1
+						" ":
+							line.append("")
+							r += 1
+						_:
+							line[-1] += ch
+							r += 1
+			assert(!instr)
+			if instr:
+				push_error("Imbalanced string on line: ", i)
+				return
+			raw.append_array(line)
+		else:
+			raw.append_array(i.split(" ", false))
+	while raw.has(""):
+		raw.erase("")
+	for i in raw.size():
+		var l := raw[i].to_upper()
+		if BLKS.has(l):
+			raw[i] = str(BLKS.find(l))
+		elif REGS.has(l):
+			raw[i] = str(REGS.find(l))
+		else:
+			for s in INSTR.size():
+				if l == INSTR[s][0]:
+					raw[i] = str(s)
+					break
+	var linecounter:int = 0
+	var lbls:Dictionary[String, int] = {}
+	for i in raw:
+		if i[-1] == ":":
+			lbls[i.remove_chars(":")] = linecounter
+		else:
+			linecounter += 1
+	linecounter = 0
+	while linecounter < raw.size():
+		if raw[linecounter][-1] == ":":
+			raw.remove_at(linecounter)
+		else:
+			linecounter += 1
+	var compiled:PackedInt64Array
+	for i in raw:
+		if i.is_valid_int():
+			compiled.append(i.to_int())
+		elif i.is_valid_hex_number(true):
+			compiled.append(i.hex_to_int())
+		elif i.erase(0) in lbls:
+			compiled.append(lbls[i.erase(0)])
+		else:
+			push_error("invalid token: ", i)
+			return
+	var dat = MemoryCard.new()
+	dat.data.assign(compiled)
+	cpu.bios_rom = dat
+	_sync_mem()
+	cpu.startup()
 
 
 func save_card():
@@ -271,8 +372,10 @@ func _pString() -> void:
 
 
 func _on_file_index_pressed(index: int) -> void:
+	fd.filters = SAVEABLE
 	match index:
 		0:
+			fd.filters = LOADABLE
 			fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 			fd.popup()
 			filepath = await fd.file_selected
