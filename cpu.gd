@@ -27,6 +27,9 @@ enum {
 	PCOUNT,
 	ALUMODE,
 	JREL,
+	OFFS,
+	SIZE,
+	STACKP,
 }
 var regs:Array[int] = [
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -72,16 +75,19 @@ enum {
 	PULL,
 	ITS,
 	FTS,
+	CTXT,
 	HLT,
 	XCPT,
 }
 enum {
-	SOK,
-	SSTACKOVERFLOW
+	S_OK,
+	S_STACK_OVERFLOW,
+	S_ACCESS_VIOLATION,
 }
 
 
 var ram:PackedInt64Array = []
+
 
 var firm:Array[int] = [
 	ADD,				#0
@@ -100,11 +106,17 @@ var firm:Array[int] = [
 
 
 var stack:Array[int] = []
+var stack_pointer:int = -1
 var pc:int = 0
 var running := false
-var stat:int = SOK
+var stat:int = S_OK
 var devs:Array[Device] = []
 var convhold:PackedByteArray = []
+var mem_managed_offset:int = 0
+var mem_managed_size:int = 0
+
+# context layout in memory: [registers][stack][process memory]
+var context_header_size := regs.size() + STACKSIZE
 
 
 func adddev(d:Device) -> void:
@@ -148,36 +160,98 @@ func startup() -> void:
 		return
 	pc = 0
 	stack = []
-	stat = SOK
+	stack.resize(STACKSIZE)
+	stack_pointer = -1
+	mem_managed_offset = 0
+	mem_managed_size = 0
+	stat = S_OK
 	for i in regs.size():
 		regs[i] = 0
 	if loadmode && is_instance_valid(bios_rom):
 		firm = bios_rom.data.duplicate()
 	for i in firm.size():
-		ram[i] = firm[i]
+		ram[i + context_header_size] = firm[i]
+
+
+func managed_address(addr:int) -> int:
+	return addr + mem_managed_offset + context_header_size
+
+
+func protected_bounds_check(addr:int) -> bool:
+	if mem_managed_size == 0:
+		return true
+	if addr >= mem_managed_size:
+		stat = S_ACCESS_VIOLATION
+		return false
+	if addr < 0:
+		stat = S_ACCESS_VIOLATION
+		return false
+	return true
 
 
 func gram(addr:int) -> int:
-	var s = ram.size()
-	if addr >= s:
+	var s := ram.size()
+	if not protected_bounds_check(addr):
+		return 0
+	var raddr := managed_address(addr)
+	if raddr >= s:
 		return randi_range(NOP, XCPT + 1)
 	else:
-		return ram[addr]
+		return ram[raddr]
 
 
 func sram(addr:int, val:int) -> void:
 	var s = ram.size()
-	if addr < s:
-		ram[addr] = val
+	if not protected_bounds_check(addr):
+		return
+	var raddr := managed_address(addr)
+	if raddr < s:
+		ram[raddr] = val
 
 
 func gdev() -> Device:
 	return devs[regs[DEVADDR] % devs.size()]
 
 
+func context_switch(addr:int) -> void:
+	regs[PCOUNT] = pc
+	regs[OFFS] = mem_managed_offset
+	regs[SIZE] = mem_managed_size
+	regs[STACKP] = stack_pointer
+	var s := ram.size()
+	var rs := regs.size()
+	for i in rs:
+		var a := i + mem_managed_offset
+		if a < s:
+			ram[a] = regs[i] #done without gram() to avoid memory protection
+	for i in STACKSIZE:
+		var a := i + mem_managed_offset + rs
+		if a < s:
+			ram[a] = stack[i]
+	mem_managed_offset = addr
+	for i in regs.size():
+		var a := i + mem_managed_offset
+		if a < s:
+			regs[i] = ram[a]
+		else:
+			regs[i] = randi_range(NOP, XCPT + 1)
+	pc = regs[PCOUNT]
+	mem_managed_size = regs[SIZE]
+	stack_pointer = regs[STACKP]
+	for i in STACKSIZE:
+		var a := i + mem_managed_offset + rs
+		if a < s:
+			stack[i] = ram[a]
+		else:
+			stack[i] = randi_range(NOP, XCPT + 1)
+
+
 func _process(_delta: float) -> void:
 	if running:
 		for _i in loops:
+			if mem_managed_size > 0:
+				if pc >= mem_managed_size:
+					pc %= mem_managed_size
 			gdev().register = regs[DEVBUF]
 			var instr := gram(pc)
 			var opa := gram(pc + 1)
@@ -186,6 +260,9 @@ func _process(_delta: float) -> void:
 			var opd := gram(pc + 4)
 			var ope := gram(pc + 5)
 			regs[PCOUNT] = pc
+			regs[OFFS] = mem_managed_offset
+			regs[SIZE] = mem_managed_size
+			regs[STACKP] = stack_pointer
 			match instr:
 				NOP:
 					pc += 1
@@ -209,7 +286,7 @@ func _process(_delta: float) -> void:
 						else:
 							pc += opa
 					else:
-						pc += 2 
+						pc += 2
 				JGT:
 					if regs[A] > regs[B]:
 						if regs[JREL] == 0:
@@ -227,24 +304,22 @@ func _process(_delta: float) -> void:
 					else:
 						pc += 2
 				JSR:
-					stack.push_back(pc + 1)
+					stack_pointer += 1
+					if stack_pointer > STACKSIZE:
+						running = false
+						stat = S_STACK_OVERFLOW
+						break
+					stack[stack_pointer] = pc + 2
 					if regs[JREL] == 0:
 						pc = opa
 					else:
 						pc += opa
-					var s = stack.size()
-					if s > STACKSIZE:
-						running = false
-						stat = SSTACKOVERFLOW
 				RET:
-					var s = stack.size()
-					if s > STACKSIZE:
-						running = false
-						stat = SSTACKOVERFLOW
-					elif s > 0:
-						pc = stack.pop_back()
+					if stack_pointer >= 0:
+						pc = stack[stack_pointer]
 					else:
 						pc = randi_range(0, ram.size())
+					stack_pointer -= 1
 				ADD:
 					regs[ALUMODE] = ADD
 					pc += 1
@@ -368,6 +443,12 @@ func _process(_delta: float) -> void:
 						c += 1
 					sram(c, 0)
 					pc += 3
+				CTXT:
+					pc += 2
+					if mem_managed_size > 0:
+						context_switch(0)
+					else:
+						context_switch(opa)
 				HLT:
 					running = false
 					stat = opa
@@ -521,6 +602,8 @@ func _process(_delta: float) -> void:
 					regs[ACCB] = regs[C] + regs[D]
 					regs[ACCC] = regs[A] + regs[C]
 					regs[ACCD] = regs[B] + regs[D]
+			if stat == S_ACCESS_VIOLATION:
+				context_switch(0)
 		_fmtout()
 		$"../Label2".text = str(stack)
 

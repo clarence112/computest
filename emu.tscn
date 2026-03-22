@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cs5b6fqelc2g3"]
+[gd_scene format=3 uid="uid://cs5b6fqelc2g3"]
 
 [ext_resource type="Script" uid="uid://dyrg1od84re1o" path="res://cpu.gd" id="1_5tpwo"]
 [ext_resource type="Script" uid="uid://bo7lysufusws1" path="res://simpledev.gd" id="2_5l5gq"]
@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://cfn7ge48e2ffa" path="res://PxPlus_IBM_VGA_8x16.ttf" id="3_airrw"]
 [ext_resource type="PackedScene" uid="uid://dhr12my77luyy" path="res://vt101.tscn" id="4_yo5cd"]
 
-[node name="VBoxContainer" type="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" unique_id=1664968143]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -14,13 +14,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1082215142]
 layout_mode = 2
 
-[node name="MenuBar" type="MenuBar" parent="PanelContainer"]
+[node name="MenuBar" type="MenuBar" parent="PanelContainer" unique_id=1789008999]
 layout_mode = 2
 
-[node name="File" type="PopupMenu" parent="PanelContainer/MenuBar"]
+[node name="File" type="PopupMenu" parent="PanelContainer/MenuBar" unique_id=552080710]
 oversampling_override = 1.0
 item_count = 5
 item_0/text = "Open..."
@@ -34,24 +34,24 @@ item_3/separator = true
 item_4/text = "New"
 item_4/id = 4
 
-[node name="Control" type="TabContainer" parent="."]
+[node name="Control" type="TabContainer" parent="." unique_id=66891998]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 current_tab = 0
 
-[node name="main" type="Control" parent="Control"]
+[node name="main" type="Control" parent="Control" unique_id=757466443]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="cpu" type="Node" parent="Control/main"]
+[node name="cpu" type="Node" parent="Control/main" unique_id=738750850]
 script = ExtResource("1_5tpwo")
 
-[node name="simpledev" type="Label" parent="Control/main"]
+[node name="simpledev" type="Label" parent="Control/main" unique_id=1105131686]
 layout_mode = 0
 script = ExtResource("2_5l5gq")
 
-[node name="Button" type="Button" parent="Control/main"]
+[node name="Button" type="Button" parent="Control/main" unique_id=101328488]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -60,7 +60,7 @@ offset_right = 74.0
 offset_bottom = 22.0
 text = "start that shit"
 
-[node name="Label" type="Label" parent="Control/main"]
+[node name="Label" type="Label" parent="Control/main" unique_id=316816029]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 51.0
@@ -69,7 +69,7 @@ offset_bottom = 74.0
 theme_override_fonts/font = ExtResource("3_airrw")
 text = "hheh"
 
-[node name="Label2" type="Label" parent="Control/main"]
+[node name="Label2" type="Label" parent="Control/main" unique_id=971692058]
 layout_mode = 0
 offset_left = 29.0
 offset_top = 29.0
@@ -78,18 +78,19 @@ offset_bottom = 59.0
 theme_override_fonts/font = ExtResource("3_airrw")
 text = "hheh"
 
-[node name="Window" type="Window" parent="Control/main"]
+[node name="Window" type="Window" parent="Control/main" unique_id=1937403068]
 oversampling_override = 1.0
 title = "VT101"
 initial_position = 2
 size = Vector2i(800, 475)
 unresizable = true
 
-[node name="vt101" parent="Control/main/Window" instance=ExtResource("4_yo5cd")]
+[node name="vt101" parent="Control/main/Window" unique_id=2072859599 instance=ExtResource("4_yo5cd")]
 
-[node name="editor" type="HSplitContainer" parent="Control"]
+[node name="editor" type="HSplitContainer" parent="Control" unique_id=1348399485]
 visible = false
 layout_mode = 2
+split_offsets = PackedInt32Array(-300)
 split_offset = -300
 script = ExtResource("3_2r6f6")
 lineNumCol = Color(0.49319, 0.49319, 0.49319, 1)
@@ -100,110 +101,110 @@ datCol = Color(0.364706, 1, 0.301961, 1)
 blkCol = Color(0.565947, 0.562534, 1, 1)
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Control/editor"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/editor" unique_id=464170164]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/editor/ScrollContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/editor/ScrollContainer" unique_id=137240965]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer" unique_id=1877788428]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VSeparator" type="VSeparator" parent="Control/editor/ScrollContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="Control/editor/ScrollContainer/HBoxContainer" unique_id=243785383]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="Control/editor/ScrollContainer/HBoxContainer" unique_id=1094299479]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="Control/editor"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="Control/editor" unique_id=1558414516]
 layout_mode = 2
 
-[node name="TabContainer" type="TabContainer" parent="Control/editor/ScrollContainer2"]
+[node name="TabContainer" type="TabContainer" parent="Control/editor/ScrollContainer2" unique_id=297524881]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/side_margin = 0
 current_tab = 5
 
-[node name="Instructions" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="Instructions" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=1986888469]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 metadata/_tab_index = 0
 
-[node name="Registers" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="Registers" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=752748805]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Address" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="Address" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=1757185580]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Address"]
+[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Address" unique_id=1935200295]
 layout_mode = 2
 rounded = true
 allow_greater = true
 prefix = "$"
 
-[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Address"]
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Address" unique_id=1981874055]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.791106, 0.791106, 1)
 text = "Submit"
 
-[node name="Data" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="Data" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=689242155]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
+[node name="SpinBox" type="SpinBox" parent="Control/editor/ScrollContainer2/TabContainer/Data" unique_id=1070417548]
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
+[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/Data" unique_id=507025435]
 layout_mode = 2
 max_length = 1
 
-[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Data"]
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/Data" unique_id=411036832]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.364706, 1, 0.301961, 1)
 text = "Submit"
 
-[node name="Blocks" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="Blocks" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=1411386466]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="String" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer"]
+[node name="String" type="VBoxContainer" parent="Control/editor/ScrollContainer2/TabContainer" unique_id=801440609]
 layout_mode = 2
 metadata/_tab_index = 5
 
-[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+[node name="LineEdit" type="LineEdit" parent="Control/editor/ScrollContainer2/TabContainer/String" unique_id=657626185]
 layout_mode = 2
 
-[node name="CheckButton2" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+[node name="CheckButton2" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String" unique_id=1972438668]
 layout_mode = 2
 text = "CRLF"
 
-[node name="CheckButton" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+[node name="CheckButton" type="CheckButton" parent="Control/editor/ScrollContainer2/TabContainer/String" unique_id=705622119]
 layout_mode = 2
 button_pressed = true
 text = "Null terminated"
 
-[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/String"]
+[node name="Button" type="Button" parent="Control/editor/ScrollContainer2/TabContainer/String" unique_id=1457478551]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.364706, 1, 0.301961, 1)
 text = "Submit"
 
-[node name="PopupPanel" type="Window" parent="Control"]
+[node name="PopupPanel" type="Window" parent="Control" unique_id=748038846]
 oversampling_override = 1.0
 title = "Edit"
 initial_position = 1
@@ -212,25 +213,25 @@ visible = false
 always_on_top = true
 keep_title_visible = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/PopupPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PopupPanel" unique_id=1117737941]
 offset_right = 400.0
 offset_bottom = 300.0
 
-[node name="SpinBox" type="SpinBox" parent="Control/PopupPanel/VBoxContainer"]
+[node name="SpinBox" type="SpinBox" parent="Control/PopupPanel/VBoxContainer" unique_id=1973733624]
 layout_mode = 2
 rounded = true
 allow_greater = true
 allow_lesser = true
 
-[node name="Button" type="Button" parent="Control/PopupPanel/VBoxContainer"]
+[node name="Button" type="Button" parent="Control/PopupPanel/VBoxContainer" unique_id=362432913]
 layout_mode = 2
 text = "Edit"
 
-[node name="Button2" type="Button" parent="Control/PopupPanel/VBoxContainer"]
+[node name="Button2" type="Button" parent="Control/PopupPanel/VBoxContainer" unique_id=20352229]
 layout_mode = 2
 text = "Delete"
 
-[node name="FileDialog" type="FileDialog" parent="Control"]
+[node name="FileDialog" type="FileDialog" parent="Control" unique_id=241294841]
 title = "Open a File"
 file_mode = 0
 access = 2

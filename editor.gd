@@ -58,13 +58,15 @@ const INSTR:Array = [
 	["PULL", [BLK, ADDR, REG], "PULL [SRC TYPE] [SRC ADDRESS] [DEST REG]\nCopes SRC RAM or device to DEST register"],
 	["ITS", [REG, ADDR], "ITS [SRC REG] [DEST ADDRESS]\nConverts the integer in REG to a null-terminated string, storing it in RAM at ADDRESS"],
 	["FTS", [REG, ADDR], "FTS [SRC REG] [DEST ADDRESS]\nConverts the float in REG to a null-terminated string, storing it in RAM at ADDRESS"],
+	["CTXT", [ADDR], "CTXT [ADDR]\nSwitches contexts to ADDR\nIf in a protected context, always switch to context 0"],
 	["HLT", [DAT], "HLT [STAT]\nStops execution, with STAT representing an exit code\nExecution can be resumed from this point by external sources"],
 	["XCPT", [DAT], "XCPT [STAT]\nStops execution, with STAT representing an exit code\nExecution CANNOT be resumed from this point without resetting the processor"],
 ]
 const REGS := [
 	"A", "B", "C", "D", "SA", "SB", "SC", "SD",
 	"ACCA", "ACCB", "ACCC", "ACCD", "DEVADDR",
-	"DEVBUF", "PCOUNT", "ALUMODE", "JREL"
+	"DEVBUF", "PCOUNT", "ALUMODE", "JREL", "OFFS",
+	"SIZE", "STACKP",
 ]
 const BLKS := [
 	"RAM", "DEV",
@@ -275,9 +277,10 @@ func assemble() -> void:
 			compiled.append(i.to_int())
 		elif i.is_valid_hex_number(true):
 			compiled.append(i.hex_to_int())
-		elif i.erase(0) in lbls:
+		elif (i[0] == "%") and (i.erase(0) in lbls):
 			compiled.append(lbls[i.erase(0)])
 		else:
+			print(lbls)
 			push_error("invalid token: ", i)
 			return
 	var dat = MemoryCard.new()
