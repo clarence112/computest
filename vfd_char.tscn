@@ -1,0 +1,248 @@
+[gd_scene format=3 uid="uid://7njncra1ujje"]
+
+[ext_resource type="Script" uid="uid://c8norm8rdiv64" path="res://vfd_char.gd" id="1_l5gne"]
+
+[node name="VFDChar" type="Control" unique_id=1540190205]
+custom_minimum_size = Vector2(26, 33)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 26.0
+offset_bottom = 33.0
+script = ExtResource("1_l5gne")
+
+[node name="VFDChar" type="Node2D" parent="." unique_id=878500867]
+position = Vector2(3, 0)
+skew = 0.090757124
+
+[node name="ColorRect" type="ColorRect" parent="VFDChar" unique_id=1682212433]
+offset_right = 3.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect2" type="ColorRect" parent="VFDChar" unique_id=171425487]
+offset_left = 5.0
+offset_right = 8.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect3" type="ColorRect" parent="VFDChar" unique_id=1986982139]
+offset_left = 10.0
+offset_right = 13.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect4" type="ColorRect" parent="VFDChar" unique_id=788332]
+offset_left = 15.0
+offset_right = 18.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect5" type="ColorRect" parent="VFDChar" unique_id=1764611309]
+offset_left = 20.0
+offset_right = 23.0
+offset_bottom = 3.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect6" type="ColorRect" parent="VFDChar" unique_id=1726846185]
+offset_top = 5.0
+offset_right = 3.0
+offset_bottom = 8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect7" type="ColorRect" parent="VFDChar" unique_id=866349840]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 8.0
+offset_bottom = 8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect8" type="ColorRect" parent="VFDChar" unique_id=557015849]
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 13.0
+offset_bottom = 8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect9" type="ColorRect" parent="VFDChar" unique_id=1338020426]
+offset_left = 15.0
+offset_top = 5.0
+offset_right = 18.0
+offset_bottom = 8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect10" type="ColorRect" parent="VFDChar" unique_id=1911265771]
+offset_left = 20.0
+offset_top = 5.0
+offset_right = 23.0
+offset_bottom = 8.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect11" type="ColorRect" parent="VFDChar" unique_id=813902071]
+offset_top = 10.0
+offset_right = 3.0
+offset_bottom = 13.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect12" type="ColorRect" parent="VFDChar" unique_id=1770543290]
+offset_left = 5.0
+offset_top = 10.0
+offset_right = 8.0
+offset_bottom = 13.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect13" type="ColorRect" parent="VFDChar" unique_id=1064993653]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 13.0
+offset_bottom = 13.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect14" type="ColorRect" parent="VFDChar" unique_id=1356508576]
+offset_left = 15.0
+offset_top = 10.0
+offset_right = 18.0
+offset_bottom = 13.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect15" type="ColorRect" parent="VFDChar" unique_id=507074634]
+offset_left = 20.0
+offset_top = 10.0
+offset_right = 23.0
+offset_bottom = 13.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect16" type="ColorRect" parent="VFDChar" unique_id=1520427150]
+offset_top = 15.0
+offset_right = 3.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect17" type="ColorRect" parent="VFDChar" unique_id=90878604]
+offset_left = 5.0
+offset_top = 15.0
+offset_right = 8.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect18" type="ColorRect" parent="VFDChar" unique_id=1033993943]
+offset_left = 10.0
+offset_top = 15.0
+offset_right = 13.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect19" type="ColorRect" parent="VFDChar" unique_id=951362611]
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 18.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect20" type="ColorRect" parent="VFDChar" unique_id=2040904462]
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 23.0
+offset_bottom = 18.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect21" type="ColorRect" parent="VFDChar" unique_id=1183783488]
+offset_top = 20.0
+offset_right = 3.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect22" type="ColorRect" parent="VFDChar" unique_id=83215904]
+offset_left = 5.0
+offset_top = 20.0
+offset_right = 8.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect23" type="ColorRect" parent="VFDChar" unique_id=690237812]
+offset_left = 10.0
+offset_top = 20.0
+offset_right = 13.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect24" type="ColorRect" parent="VFDChar" unique_id=1803318807]
+offset_left = 15.0
+offset_top = 20.0
+offset_right = 18.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect25" type="ColorRect" parent="VFDChar" unique_id=468675670]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 23.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect26" type="ColorRect" parent="VFDChar" unique_id=1105739879]
+offset_top = 25.0
+offset_right = 3.0
+offset_bottom = 28.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect27" type="ColorRect" parent="VFDChar" unique_id=884308276]
+offset_left = 5.0
+offset_top = 25.0
+offset_right = 8.0
+offset_bottom = 28.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect28" type="ColorRect" parent="VFDChar" unique_id=966934141]
+offset_left = 10.0
+offset_top = 25.0
+offset_right = 13.0
+offset_bottom = 28.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect29" type="ColorRect" parent="VFDChar" unique_id=224098933]
+offset_left = 15.0
+offset_top = 25.0
+offset_right = 18.0
+offset_bottom = 28.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect30" type="ColorRect" parent="VFDChar" unique_id=100700473]
+offset_left = 20.0
+offset_top = 25.0
+offset_right = 23.0
+offset_bottom = 28.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect31" type="ColorRect" parent="VFDChar" unique_id=606681895]
+offset_top = 30.0
+offset_right = 3.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect32" type="ColorRect" parent="VFDChar" unique_id=706207828]
+offset_left = 5.0
+offset_top = 30.0
+offset_right = 8.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect33" type="ColorRect" parent="VFDChar" unique_id=106193709]
+offset_left = 10.0
+offset_top = 30.0
+offset_right = 13.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect34" type="ColorRect" parent="VFDChar" unique_id=1212940163]
+offset_left = 15.0
+offset_top = 30.0
+offset_right = 18.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect35" type="ColorRect" parent="VFDChar" unique_id=1784936001]
+offset_left = 20.0
+offset_top = 30.0
+offset_right = 23.0
+offset_bottom = 33.0
+metadata/_edit_use_anchors_ = true

@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://scjyk1qukdby"]
+
+[ext_resource type="PackedScene" uid="uid://7njncra1ujje" path="res://vfd_char.tscn" id="1_itpmf"]
+
+[node name="Control" type="Panel" unique_id=645090328]
+offset_right = 648.0
+offset_bottom = 100.0
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1731616531]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer" unique_id=669590844]
+layout_mode = 2
+columns = 20
+
+[node name="VFDChar" parent="CenterContainer/GridContainer" unique_id=1540190205 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar2" parent="CenterContainer/GridContainer" unique_id=245138712 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar3" parent="CenterContainer/GridContainer" unique_id=817962440 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar4" parent="CenterContainer/GridContainer" unique_id=1882446761 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar5" parent="CenterContainer/GridContainer" unique_id=1819603083 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar6" parent="CenterContainer/GridContainer" unique_id=1660145646 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar7" parent="CenterContainer/GridContainer" unique_id=666749118 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar8" parent="CenterContainer/GridContainer" unique_id=732958146 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar9" parent="CenterContainer/GridContainer" unique_id=2048684136 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar10" parent="CenterContainer/GridContainer" unique_id=760098151 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar11" parent="CenterContainer/GridContainer" unique_id=1869083367 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar12" parent="CenterContainer/GridContainer" unique_id=692489661 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar13" parent="CenterContainer/GridContainer" unique_id=130889992 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar14" parent="CenterContainer/GridContainer" unique_id=2102504784 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar15" parent="CenterContainer/GridContainer" unique_id=340584736 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar16" parent="CenterContainer/GridContainer" unique_id=1319670302 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar17" parent="CenterContainer/GridContainer" unique_id=1727995 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar18" parent="CenterContainer/GridContainer" unique_id=490684574 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar19" parent="CenterContainer/GridContainer" unique_id=1182124566 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar20" parent="CenterContainer/GridContainer" unique_id=1495049314 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar21" parent="CenterContainer/GridContainer" unique_id=1266189819 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar22" parent="CenterContainer/GridContainer" unique_id=392406024 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar23" parent="CenterContainer/GridContainer" unique_id=840806694 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar24" parent="CenterContainer/GridContainer" unique_id=1052031695 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar25" parent="CenterContainer/GridContainer" unique_id=674774199 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar26" parent="CenterContainer/GridContainer" unique_id=1845898606 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar27" parent="CenterContainer/GridContainer" unique_id=1506043813 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar28" parent="CenterContainer/GridContainer" unique_id=450880605 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar29" parent="CenterContainer/GridContainer" unique_id=1192150603 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar30" parent="CenterContainer/GridContainer" unique_id=1331302918 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar31" parent="CenterContainer/GridContainer" unique_id=439526238 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar32" parent="CenterContainer/GridContainer" unique_id=1098638464 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar33" parent="CenterContainer/GridContainer" unique_id=968476493 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar34" parent="CenterContainer/GridContainer" unique_id=132946862 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar35" parent="CenterContainer/GridContainer" unique_id=1712271520 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar36" parent="CenterContainer/GridContainer" unique_id=2011753 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar37" parent="CenterContainer/GridContainer" unique_id=9140837 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar38" parent="CenterContainer/GridContainer" unique_id=1224148197 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar39" parent="CenterContainer/GridContainer" unique_id=67455671 instance=ExtResource("1_itpmf")]
+layout_mode = 2
+
+[node name="VFDChar40" parent="CenterContainer/GridContainer" unique_id=564541950 instance=ExtResource("1_itpmf")]
+layout_mode = 2

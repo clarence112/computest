@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://b8mexmlpu5htb"
+path="res://.godot/imported/charset.png-70ba6010d8841af1196b87ccfd8de515.res"
+
+[deps]
+
+source_file="res://textures/charset.png"
+dest_files=["res://.godot/imported/charset.png-70ba6010d8841af1196b87ccfd8de515.res"]
+
+[params]
+
+create_from=0
+threshold=0.5
